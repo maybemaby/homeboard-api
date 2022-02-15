@@ -11,10 +11,8 @@ const user: IUser = {
   lastName: "Ma",
   homes: [],
   id: generateUID(),
-  metadata: {
-    lastLogin: new Date(),
-    signUpDate: new Date(),
-  },
+  lastLogin: new Date(),
+  signUpDate: new Date(),
 };
 
 const roommate: IRoommate = {
