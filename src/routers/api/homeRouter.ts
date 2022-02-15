@@ -1,11 +1,10 @@
 import { Router } from "express";
+import asyncWrapper from "../../asyncWrapper";
 import homeController from "../../controllers/homeController";
 
 export const homeRouter = Router();
 
-homeRouter.get("/", homeController.getHomes);
+homeRouter.get("/", asyncWrapper(homeController.getHomes));
 
-homeRouter.get("/:homeId", homeController.getHomeById);
-homeRouter.get("/:homeId/messages", homeController.getMessages);
-homeRouter.post("/:homeId/messages", homeController.postHome);
-homeRouter.post("/", homeController.postHome);
+homeRouter.get("/:homeId", asyncWrapper(homeController.getHomeById));
+homeRouter.post("/", asyncWrapper(homeController.postHome));
