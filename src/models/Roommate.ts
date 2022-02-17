@@ -1,9 +1,11 @@
-import { IUser } from "./User";
+import { IHome } from "./Home";
 
 type RoommateRole = "Manager" | "Roommate";
 
 export interface IRoommate {
   id: string;
-  user: IUser;
+  userId: string;
   role: RoommateRole;
+  home: IHome;
+  homeId: string;
 }
