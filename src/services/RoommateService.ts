@@ -17,6 +17,9 @@ async function getById(id: string) {
     where: {
       id: id,
     },
+    include: {
+      sentMessages: true,
+    },
   });
 }
 

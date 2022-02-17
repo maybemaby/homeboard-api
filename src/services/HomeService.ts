@@ -16,6 +16,7 @@ async function getById(id: string) {
     },
     include: {
       roommates: true,
+      messages: true,
     },
   });
   return home;
