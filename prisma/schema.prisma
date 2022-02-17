@@ -15,14 +15,16 @@ model Home {
   name      String
   createdAt DateTime   @default(now())
   roommates Roommate[]
+  messages  Message[]
 }
 
 model Roommate {
-  id     String @id @unique @default(uuid())
-  role   String
-  home   Home   @relation(fields: [homeId], references: [id])
-  homeId String
-  userId String
+  id           String    @id @unique @default(uuid())
+  role         String
+  home         Home      @relation(fields: [homeId], references: [id])
+  homeId       String
+  userId       String
+  sentMessages Message[]
 }
 
 model User {
@@ -33,4 +35,15 @@ model User {
   lastName   String
   signUpDate DateTime  @default(now())
   lastLogin  DateTime?
+}
+
+model Message {
+  id         String   @id @unique @default(uuid())
+  content    String
+  sentAt     DateTime @default(now())
+  sender     Roommate @relation(fields: [senderId], references: [id])
+  senderId   String
+  receiverId String?
+  Home       Home     @relation(fields: [homeId], references: [id])
+  homeId     String
 }
