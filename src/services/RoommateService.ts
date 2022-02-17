@@ -18,7 +18,9 @@ async function getById(id: string) {
       id: id,
     },
     include: {
-      sentMessages: true,
+      sentMessages: {
+        take: 10,
+      },
     },
   });
 }
