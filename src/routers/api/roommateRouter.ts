@@ -1,6 +1,6 @@
 import { Router } from "express";
-import asyncWrapper from "../asyncWrapper";
-import roommateController from "../controllers/roommateController";
+import asyncWrapper from "../../asyncWrapper";
+import roommateController from "../../controllers/roommateController";
 
 export const roommateRouter = Router();
 
