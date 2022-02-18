@@ -16,6 +16,7 @@ model Home {
   createdAt DateTime   @default(now())
   roommates Roommate[]
   messages  Message[]
+  events    Event[]
 }
 
 model Roommate {
@@ -25,6 +26,7 @@ model Roommate {
   homeId       String
   userId       String
   sentMessages Message[]
+  events       Event[]
 }
 
 model User {
@@ -46,4 +48,18 @@ model Message {
   receiverId String?
   Home       Home     @relation(fields: [homeId], references: [id])
   homeId     String
+}
+
+model Event {
+  id          String    @id @unique @default(uuid())
+  name        String
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  beginsAt    DateTime
+  endsAt      DateTime?
+  home        Home      @relation(fields: [homeId], references: [id])
+  homeId      String
+  createdBy   Roommate  @relation(fields: [createdById], references: [id])
+  createdById String
 }
