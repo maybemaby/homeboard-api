@@ -26,10 +26,14 @@ async function getMessagesBySender(req: Request, res: Response) {
 // api/v1/homes/:homeId/messages
 async function getMessagesByHome(req: Request, res: Response) {
   const homeId = req.params.homeId;
+  const start = req.query.start ? String(req.query.start) : req.query.start;
+  const size = parseInt(String(req.query.size));
   if (!homeId) {
     res.sendStatus(404);
+  } else if (size > 100) {
+    res.status(400).send("Size cannot exceed 100");
   } else {
-    const messages = await MessageService.getAllByHomeId(homeId);
+    const messages = await MessageService.getAllByHomeId(homeId, start, size);
     res.status(200).json(messages).send();
   }
 }
