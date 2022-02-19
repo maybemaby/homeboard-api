@@ -1,3 +1,4 @@
+import { IEvent } from "./Event";
 import { IHome } from "./Home";
 import { IMessage } from "./Message";
 
@@ -10,4 +11,5 @@ export interface IRoommate {
   home: IHome;
   homeId: string;
   sentMessages: IMessage[];
+  events: IEvent[];
 }

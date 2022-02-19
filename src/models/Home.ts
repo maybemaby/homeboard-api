@@ -1,3 +1,4 @@
+import { IEvent } from "./Event";
 import { IMessage } from "./Message";
 import { IRoommate } from "./Roommate";
 
@@ -7,4 +8,5 @@ export interface IHome {
   roommates: IRoommate[];
   messages: IMessage[];
   createdAt: Date;
+  events: IEvent[];
 }
