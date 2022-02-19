@@ -19,6 +19,9 @@ async function getById(id: string) {
       messages: {
         take: 10,
       },
+      events: {
+        take: 10,
+      },
     },
   });
   return home;
