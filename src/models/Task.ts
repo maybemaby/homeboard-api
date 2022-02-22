@@ -9,7 +9,7 @@ export interface ITask {
   beginsAt: Date;
   frequency: TaskFrequency;
   complete: boolean;
-  completedBy: string;
+  completedBy?: string;
   assignees?: IRoommate[];
   assigneeIds?: string[];
 }

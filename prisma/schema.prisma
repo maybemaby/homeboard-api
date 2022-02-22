@@ -71,8 +71,8 @@ model Task {
   createdAt   DateTime           @default(now())
   beginsAt    DateTime
   frequency   String
-  complete    Boolean
-  completedBy String
+  complete    Boolean            @default(false)
+  completedBy String?
   assignees   TasksOnRoommates[]
 }
 
