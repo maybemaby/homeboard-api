@@ -11,7 +11,7 @@ datasource db {
 }
 
 model Home {
-  id        String     @id @unique @default(uuid())
+  id        String     @id @unique @default(cuid())
   name      String
   createdAt DateTime   @default(now())
   roommates Roommate[]
@@ -20,17 +20,18 @@ model Home {
 }
 
 model Roommate {
-  id           String    @id @unique @default(uuid())
+  id           String             @id @unique @default(cuid())
   role         String
-  home         Home      @relation(fields: [homeId], references: [id])
+  home         Home               @relation(fields: [homeId], references: [id])
   homeId       String
   userId       String
   sentMessages Message[]
   events       Event[]
+  Tasks        TasksOnRoommates[]
 }
 
 model User {
-  id         String    @id @unique @default(uuid())
+  id         String    @id @unique @default(cuid())
   username   String    @unique
   email      String?   @unique
   firstName  String
@@ -40,7 +41,7 @@ model User {
 }
 
 model Message {
-  id         String   @id @unique @default(uuid())
+  id         String   @id @unique @default(cuid())
   content    String
   sentAt     DateTime @default(now())
   sender     Roommate @relation(fields: [senderId], references: [id])
@@ -51,7 +52,7 @@ model Message {
 }
 
 model Event {
-  id          String    @id @unique @default(uuid())
+  id          String    @id @unique @default(cuid())
   name        String
   description String?
   createdAt   DateTime  @default(now())
@@ -62,4 +63,25 @@ model Event {
   homeId      String
   createdBy   Roommate  @relation(fields: [createdById], references: [id])
   createdById String
+}
+
+model Task {
+  id          String             @id @unique @default(cuid())
+  description String?
+  createdAt   DateTime           @default(now())
+  beginsAt    DateTime
+  frequency   String
+  complete    Boolean
+  completedBy String
+  assignees   TasksOnRoommates[]
+}
+
+model TasksOnRoommates {
+  task       Task     @relation(fields: [taskId], references: [id])
+  taskId     String
+  roommate   Roommate @relation(fields: [roommateId], references: [id])
+  roommateId String
+  assignedAt DateTime @default(now())
+
+  @@id([taskId, roommateId])
 }
