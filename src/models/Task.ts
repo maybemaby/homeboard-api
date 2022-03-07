@@ -1,6 +1,6 @@
 import { IRoommate } from "./Roommate";
 
-type TaskFrequency = "daily" | "weekly" | "monthly" | "yearly";
+type TaskFrequency = "daily" | "weekly" | "monthly" | "yearly" | "norepeat";
 
 export interface ITask {
   id: string;
@@ -10,6 +10,6 @@ export interface ITask {
   frequency: TaskFrequency;
   complete: boolean;
   completedBy?: string;
-  assignees?: IRoommate[];
-  assigneeIds?: string[];
+  roommate?: IRoommate;
+  roommateId: string;
 }
