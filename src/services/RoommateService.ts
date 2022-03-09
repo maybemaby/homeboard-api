@@ -33,7 +33,9 @@ async function createOne(roommate: IRoommate) {
     return prisma.roommate.create({
       data: {
         role: roommate.role,
-        userId: roommate.userId,
+        user: {
+          connect: { id: roommate.userId },
+        },
         home: {
           connect: { id: roommate.homeId },
         },
@@ -43,7 +45,11 @@ async function createOne(roommate: IRoommate) {
     return prisma.roommate.create({
       data: {
         role: roommate.role,
-        userId: roommate.userId,
+        user: {
+          connect: {
+            id: roommate.userId,
+          },
+        },
         home: {
           connectOrCreate: {
             where: {
