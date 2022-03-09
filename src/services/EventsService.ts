@@ -17,10 +17,9 @@ async function getById(id: string) {
       id: id,
     },
     include: {
-      createdBy: true,
-      home: {
-        select: {
-          id: true,
+      createdBy: {
+        include: {
+          user: true,
         },
       },
     },
@@ -56,9 +55,24 @@ async function deleteOne(id: string) {
   });
 }
 
+async function editOne(id: string, data: IEvent) {
+  return prisma.event.update({
+    where: {
+      id: id,
+    },
+    data: {
+      beginsAt: data.beginsAt,
+      description: data.description,
+      endsAt: data.endsAt,
+      name: data.name,
+    },
+  });
+}
+
 export default {
   getAll,
   getById,
   createOne,
   deleteOne,
+  editOne,
 };

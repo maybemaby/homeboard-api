@@ -32,8 +32,21 @@ async function deleteEvent(req: Request, res: Response) {
   }
 }
 
+// PUT /events/:eventId
+async function putEvent(req: Request, res: Response) {
+  const id = req.params.eventId;
+  const data = req.body as IEvent;
+  try {
+    const updated = await EventsService.editOne(id, data);
+    res.status(201).json(updated);
+  } catch {
+    res.sendStatus(400);
+  }
+}
+
 export default {
   getEventById,
   postEvent,
   deleteEvent,
+  putEvent,
 };
