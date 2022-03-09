@@ -8,6 +8,20 @@ async function getOne(id: string) {
     where: {
       id: id,
     },
+    include: {
+      assignees: {
+        select: {
+          roommate: {
+            select: {
+              id: true,
+              homeId: true,
+              role: true,
+              user: true,
+            },
+          },
+        },
+      },
+    },
   });
 }
 
