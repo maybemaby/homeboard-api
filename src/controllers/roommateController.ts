@@ -43,24 +43,37 @@ async function deleteOne(req: Request, res: Response) {
   }
 }
 
-// GET roommates/:id/tasks?start=&size=
+// GET roommates/:id/tasks?start=&size=&incomplete=true
 async function getTasks(req: Request, res: Response) {
   const id = req.params.id;
   const start = req.query.start ? String(req.query.start) : req.query.start;
   const size = parseInt(String(req.query.size));
+  const incomplete = String(req.query.incomplete).toLowerCase() === "true";
   try {
-    const data = await TaskService.getAll(
-      {
+    if (!incomplete) {
+      const data = await TaskService.getAll(
+        {
+          assignees: {
+            every: {
+              roommateId: id,
+            },
+          },
+        },
+        start,
+        size
+      );
+      res.status(200).json(data);
+    } else {
+      const data = await TaskService.getAll({
         assignees: {
           every: {
             roommateId: id,
           },
         },
-      },
-      start,
-      size
-    );
-    res.status(200).json(data);
+        complete: false,
+      });
+      res.status(200).json(data);
+    }
   } catch {
     res.sendStatus(400);
   }
