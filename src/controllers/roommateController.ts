@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { IRoommate } from "../models/Roommate";
 import RoommateService from "../services/RoommateService";
+import TaskService from "../services/TaskService";
 
 async function getById(req: Request, res: Response) {
   const id = req.params.id;
@@ -42,9 +43,33 @@ async function deleteOne(req: Request, res: Response) {
   }
 }
 
+// GET roommates/:id/tasks?start=&size=
+async function getTasks(req: Request, res: Response) {
+  const id = req.params.id;
+  const start = req.query.start ? String(req.query.start) : req.query.start;
+  const size = parseInt(String(req.query.size));
+  try {
+    const data = await TaskService.getAll(
+      {
+        assignees: {
+          every: {
+            roommateId: id,
+          },
+        },
+      },
+      start,
+      size
+    );
+    res.status(200).json(data);
+  } catch {
+    res.sendStatus(400);
+  }
+}
+
 export default {
   getById,
   getAllByHome,
   createOne,
   deleteOne,
+  getTasks,
 };
