@@ -13,3 +13,4 @@ homeRouter.get(
   "/:homeId/messages",
   asyncWrapper(messageController.getMessagesByHome)
 );
+homeRouter.put("/:homeId", asyncWrapper(homeController.putHome));

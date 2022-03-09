@@ -35,8 +35,20 @@ async function createOne(home: Omit<IHome, "id" | "roommates">) {
   });
 }
 
+async function editOne(id: string, data: IHome) {
+  return prisma.home.update({
+    where: {
+      id: id,
+    },
+    data: {
+      name: data.name,
+    },
+  });
+}
+
 export default {
   getAll,
   getById,
   createOne,
+  editOne,
 };

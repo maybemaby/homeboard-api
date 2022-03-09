@@ -27,8 +27,21 @@ async function postHome(req: Request, res: Response) {
   }
 }
 
+// PUT /homes/:homeId
+async function putHome(req: Request, res: Response) {
+  const data = req.body as IHome;
+  const id = req.params.homeId;
+  try {
+    const updated = await HomeService.editOne(id, data);
+    res.status(201).json(updated);
+  } catch {
+    res.sendStatus(400);
+  }
+}
+
 export default {
   getHomes,
   getHomeById,
   postHome,
+  putHome,
 };
