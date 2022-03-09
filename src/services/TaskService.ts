@@ -1,7 +1,7 @@
 import prisma from "../data/db";
 import { ITask } from "../models/Task";
 import { add } from "date-fns";
-import { Task } from "@prisma/client";
+import { Prisma, Task } from "@prisma/client";
 
 async function getOne(id: string) {
   return prisma.task.findUnique({
@@ -23,6 +23,27 @@ async function getOne(id: string) {
       },
     },
   });
+}
+
+async function getAll(
+  filter: Prisma.TaskWhereInput,
+  start?: string,
+  size?: number
+) {
+  if (typeof start !== "undefined") {
+    return prisma.task.findMany({
+      where: filter,
+      cursor: {
+        id: start,
+      },
+      take: size ? size : 10,
+    });
+  } else {
+    return prisma.task.findMany({
+      where: filter,
+      take: size ? size : 10,
+    });
+  }
 }
 
 async function createOne(task: ITask) {
@@ -137,4 +158,5 @@ export default {
   getOne,
   createOne,
   completeOne,
+  getAll,
 };
