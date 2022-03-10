@@ -1,5 +1,5 @@
 import prisma from "../data/db";
-import { IRoommate } from "../models/Roommate";
+import { IRoommate, RoommateRole } from "../models/Roommate";
 
 async function getAll(homeId?: string) {
   if (homeId) {
@@ -77,9 +77,21 @@ async function deleteOne(id: string) {
   });
 }
 
+async function changeRole(id: string, role: RoommateRole) {
+  return prisma.roommate.update({
+    where: {
+      id: id,
+    },
+    data: {
+      role: role,
+    },
+  });
+}
+
 export default {
   getAll,
   getById,
   createOne,
   deleteOne,
+  changeRole,
 };

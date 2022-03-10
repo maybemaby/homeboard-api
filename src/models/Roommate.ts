@@ -1,8 +1,9 @@
+import { TasksOnRoommates } from "@prisma/client";
 import { IEvent } from "./Event";
 import { IHome } from "./Home";
 import { IMessage } from "./Message";
 
-type RoommateRole = "Manager" | "Roommate";
+export type RoommateRole = "Manager" | "Roommate";
 
 export interface IRoommate {
   id: string;
@@ -12,4 +13,5 @@ export interface IRoommate {
   homeId: string;
   sentMessages: IMessage[];
   events: IEvent[];
+  tasks: TasksOnRoommates[];
 }

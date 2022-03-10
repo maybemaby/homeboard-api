@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { IRoommate } from "../models/Roommate";
+import { IRoommate, RoommateRole } from "../models/Roommate";
 import RoommateService from "../services/RoommateService";
 import TaskService from "../services/TaskService";
 
@@ -79,10 +79,27 @@ async function getTasks(req: Request, res: Response) {
   }
 }
 
+// PUT roommates/:id/role
+async function putRole(req: Request, res: Response) {
+  const id = req.params.id;
+  const { role } = req.body as { role?: RoommateRole };
+  if (typeof role === "undefined") {
+    res.status(400).send("Body must include role property");
+  } else {
+    try {
+      const updated = await RoommateService.changeRole(id, role);
+      res.status(201).json(updated);
+    } catch {
+      res.sendStatus(400);
+    }
+  }
+}
+
 export default {
   getById,
   getAllByHome,
   createOne,
   deleteOne,
   getTasks,
+  putRole,
 };
