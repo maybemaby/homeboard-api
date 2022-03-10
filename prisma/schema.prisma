@@ -13,6 +13,7 @@ datasource db {
 model Home {
   id        String     @id @unique @default(cuid())
   name      String
+  address   String?
   createdAt DateTime   @default(now())
   roommates Roommate[]
   messages  Message[]

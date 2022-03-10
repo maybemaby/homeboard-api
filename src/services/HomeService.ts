@@ -42,6 +42,7 @@ async function editOne(id: string, data: IHome) {
     },
     data: {
       name: data.name,
+      address: data.address,
     },
   });
 }
