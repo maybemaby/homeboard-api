@@ -3,6 +3,18 @@ import { ITask } from "../models/Task";
 import { add } from "date-fns";
 import { Prisma, Task } from "@prisma/client";
 
+interface ConnectRoommate {
+  roommate: {
+    connect: {
+      id: string;
+    };
+  };
+}
+
+interface DisconnectRoommate {
+  roommateId: string;
+}
+
 async function getOne(id: string) {
   return prisma.task.findUnique({
     where: {
@@ -154,9 +166,46 @@ async function completeOne(id: string, completer: string) {
   });
 }
 
+async function editOne(id: string, data: ITask) {
+  return prisma.task.update({
+    where: {
+      id: id,
+    },
+    data: {
+      description: data.description,
+      frequency: data.frequency,
+      beginsAt: data.beginsAt,
+      complete: data.complete,
+    },
+  });
+}
+
+async function changeAssignees(
+  id: string,
+  connect?: ConnectRoommate[],
+  disconnect?: DisconnectRoommate[]
+) {
+  return prisma.task.update({
+    where: {
+      id: id,
+    },
+    data: {
+      assignees: {
+        create: connect,
+        deleteMany: disconnect,
+      },
+    },
+    include: {
+      assignees: true,
+    },
+  });
+}
+
 export default {
   getOne,
   createOne,
   completeOne,
   getAll,
+  editOne,
+  changeAssignees,
 };

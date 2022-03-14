@@ -2,6 +2,19 @@ import { Request, Response } from "express";
 import { ITask } from "../models/Task";
 import TaskService from "../services/TaskService";
 
+interface PutAssigneesBody {
+  connect?: {
+    roommate: {
+      connect: {
+        id: string;
+      };
+    };
+  }[];
+  disconnect?: {
+    roommateId: string;
+  }[];
+}
+
 // GET tasks/:taskId
 async function getTask(req: Request, res: Response) {
   const id = req.params.taskId;
@@ -40,8 +53,31 @@ async function createTask(req: Request, res: Response) {
   }
 }
 
+// PUT /tasks/:taskId/assignees
+async function putAssignees(req: Request, res: Response) {
+  const id = req.params.taskId;
+  const data = req.body as PutAssigneesBody;
+  try {
+    const updated = await TaskService.changeAssignees(
+      id,
+      data.connect,
+      data.disconnect
+    );
+    res.status(201).json(updated);
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.message.includes("Unique constraint failed")) {
+        res.status(400).send("Task already assigned to one of the roommates");
+      }
+    }
+
+    res.sendStatus(400);
+  }
+}
+
 export default {
   getTask,
   createTask,
-  completeTask
+  completeTask,
+  putAssignees,
 };
