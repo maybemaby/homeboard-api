@@ -1,5 +1,13 @@
 # Homeboard - Express API
 
+API that could theoretically be used for powering a Home dashboard for organization/communication between multiple members of a household. 
+
+
+# Features
+ - Scheduled Events
+ - Renewing Tasks
+ - Public messages
+
 ## Technology
 - Expressjs
 - Prisma with a RDB
@@ -21,3 +29,7 @@ Controllers to pass requests from routers to a service and return a response fro
 
 ## /routers
 Creates the url structure of the api and connects routes to controllers.
+
+# Todo
+  - Authentication
+  - 
