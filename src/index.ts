@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import passport from "passport";
 import { apiRouter } from "./routers/api";
 
 dotenv.config();
@@ -12,6 +13,7 @@ app.disable("x-powered-by");
 
 app.use(cors());
 app.use(express.json());
+app.use(passport.initialize());
 
 app.use("/api", apiRouter);
 
