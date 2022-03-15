@@ -1,5 +1,5 @@
 import { Router } from "express";
-import asyncWrapper from "../../asyncWrapper";
+import asyncWrapper from "../../middleware/asyncWrapper";
 import taskController from "../../controllers/taskController";
 
 const taskRouter = Router();
