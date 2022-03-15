@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import passport from "passport";
 import { apiRouter } from "./routers/api";
+import "./middleware/auth";
 
 dotenv.config();
 const PORT = process.env.PORT ?? 3000;

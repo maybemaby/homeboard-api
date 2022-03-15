@@ -1,5 +1,4 @@
-import { Request, Response } from "express";
-import { IUser } from "../models/User";
+import { Request, Response, Handler } from "express";
 import UserService from "../services/UserService";
 
 async function getUser(req: Request, res: Response) {
@@ -12,14 +11,8 @@ async function getUser(req: Request, res: Response) {
   }
 }
 
-async function postUser(req: Request, res: Response) {
-  const data = req.body as IUser;
-  try {
-    const user = await UserService.createOne(data);
-    res.status(201).json(user).send();
-  } catch {
-    res.status(400).send("Error occurred creating user");
-  }
+function postUser(req: Request, res: Response, next: Handler) {
+  res.json(req.user);
 }
 
 async function deleteUser(req: Request, res: Response) {
@@ -32,8 +25,23 @@ async function deleteUser(req: Request, res: Response) {
   }
 }
 
+// POST /auth/login
+async function login(req: Request, res: Response) {
+  const data = req.body as { username: string; password: string };
+  if (!data.username || !data.password) {
+    res.sendStatus(400);
+  }
+  const user = await UserService.login(data.username, data.password);
+  if (user) {
+    res.status(202).json(user);
+  } else {
+    res.status(401);
+  }
+}
+
 export default {
   getUser,
   postUser,
   deleteUser,
+  login,
 };
