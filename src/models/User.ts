@@ -9,6 +9,7 @@ export interface IUser extends UserMetaData {
   id: string;
   email: string;
   username: string;
+  password: string;
   firstName: string;
   lastName: string;
   homes: IHome[];
