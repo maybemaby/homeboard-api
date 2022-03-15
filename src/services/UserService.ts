@@ -54,14 +54,14 @@ async function login(username: string, password: string) {
   });
   if (user) {
     const result = await authService.comparePassword(password, user.password);
-    if (result === true) {
+    if (result) {
       const { password, ...resBody } = user;
-      return resBody;
+      return { user: resBody, message: "Success" };
     } else {
-      return;
+      return { user: null, message: "Wrong Password" };
     }
   } else {
-    return;
+    return { user: null, message: "User not found" };
   }
 }
 
