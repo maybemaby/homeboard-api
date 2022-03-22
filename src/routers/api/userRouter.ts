@@ -5,12 +5,19 @@ import userController from "../../controllers/userController";
 
 export const userRouter = Router();
 
-userRouter.get("/:id", asyncWrapper(userController.getUser));
+userRouter.get(
+  "/:id",
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  passport.authenticate("jwt", { session: false }),
+  asyncWrapper(userController.getUser)
+);
 userRouter.post(
   "/",
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  passport.authenticate("signup", { session: false }),
   userController.postUser
 );
 userRouter.delete("/:id", asyncWrapper(userController.deleteUser));
-userRouter.post("/auth/login", asyncWrapper(userController.login));
+userRouter.post("/auth/login",
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  userController.login
+);

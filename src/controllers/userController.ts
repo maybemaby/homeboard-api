@@ -1,5 +1,9 @@
-import { Request, Response, Handler } from "express";
+import { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
+import passport from "passport";
+import { IUser } from "../models/User";
 import UserService from "../services/UserService";
+import { JWT_SECRET } from "../index";
 
 async function getUser(req: Request, res: Response) {
   const id = req.params.id;
@@ -7,12 +11,23 @@ async function getUser(req: Request, res: Response) {
   if (!user) {
     res.status(400).send("User not found");
   } else {
-    res.status(200).json(user).send();
+    const { password, ...body } = user;
+    res.status(200).json(body);
   }
 }
 
-function postUser(req: Request, res: Response, next: Handler) {
-  res.json(req.user);
+function postUser(req: Request, res: Response, next: NextFunction) {
+  passport.authenticate("signup", { session: false }, (err, user, info: { message: string }) => {
+    if (err) {
+      if (info) {
+        res.status(400).send(info.message);
+      } else {
+        res.status(400).send("Could not create account");
+      }
+    } else if (user) {
+      res.status(201).json(user);
+    }
+  })(req, res, next);
 }
 
 async function deleteUser(req: Request, res: Response) {
@@ -26,22 +41,32 @@ async function deleteUser(req: Request, res: Response) {
 }
 
 // POST /auth/login
-async function login(req: Request, res: Response) {
-  const data = req.body as { username: string; password: string };
-  if (!data.username || !data.password) {
-    res.sendStatus(400);
-  }
-  const user = await UserService.login(data.username, data.password);
-  if (user) {
-    res.status(202).json(user);
-  } else {
-    res.status(401);
-  }
+function login(req: Request, res: Response, next: NextFunction) {
+  passport.authenticate("login", (err, user: Omit<IUser, "password">, info) => {
+    try {
+      if (err || !user) {
+        const error = new Error("Could not login");
+        return next(error);
+      }
+
+      req.login(user, { session: false }, (err) => {
+        if (err) return next(err);
+        const body = { ...user };
+        const token = jwt.sign({ user: body }, JWT_SECRET, {
+          expiresIn: "7d",
+          issuer: "https://homeboard.com"
+        });
+        return res.json({ token });
+      });
+    } catch (err) {
+      return next(err);
+    }
+  })(req, res, next);
 }
 
 export default {
   getUser,
   postUser,
   deleteUser,
-  login,
+  login
 };

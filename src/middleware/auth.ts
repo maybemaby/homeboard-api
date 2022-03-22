@@ -1,7 +1,9 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
+import { Strategy as JWTStrategy, ExtractJwt } from "passport-jwt";
 import { IUser } from "../models/User";
 import UserService from "../services/UserService";
+import { JWT_SECRET } from "../index";
 
 passport.use(
   "signup",
@@ -9,7 +11,7 @@ passport.use(
     {
       usernameField: "username",
       passwordField: "password",
-      passReqToCallback: true,
+      passReqToCallback: true
     },
     (req, username, password, done) => {
       const data = req.body as IUser;
@@ -18,7 +20,11 @@ passport.use(
           return done(null, user);
         })
         .catch((err) => {
-          return done(err);
+          if ((err as Error).message) {
+            return done(err, false, { message: "Username already in use" });
+          } else {
+            return done(err);
+          }
         });
     }
   )
@@ -29,7 +35,7 @@ passport.use(
   new LocalStrategy(
     {
       usernameField: "username",
-      passwordField: "password",
+      passwordField: "password"
     },
     (username, password, done) => {
       UserService.login(username, password)
@@ -43,6 +49,23 @@ passport.use(
         .catch((err) => {
           return done(err);
         });
+    }
+  )
+);
+
+passport.use(
+  new JWTStrategy(
+    {
+      secretOrKey: JWT_SECRET,
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      issuer: "https://homeboard.com"
+    },
+    (token: { user: IUser }, done) => {
+      try {
+        return done(null, token.user);
+      } catch (err) {
+        done(err);
+      }
     }
   )
 );
