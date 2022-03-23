@@ -11,7 +11,7 @@ passport.use(
     {
       usernameField: "username",
       passwordField: "password",
-      passReqToCallback: true
+      passReqToCallback: true,
     },
     (req, username, password, done) => {
       const data = req.body as IUser;
@@ -35,7 +35,7 @@ passport.use(
   new LocalStrategy(
     {
       usernameField: "username",
-      passwordField: "password"
+      passwordField: "password",
     },
     (username, password, done) => {
       UserService.login(username, password)
@@ -58,11 +58,21 @@ passport.use(
     {
       secretOrKey: JWT_SECRET,
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      issuer: "https://homeboard.com"
+      issuer: "https://homeboard.com",
     },
     (token: { user: IUser }, done) => {
       try {
-        return done(null, token.user);
+        UserService.getById(token.user.id)
+          .then((user) => {
+            if (user) {
+              return done(null, token.user);
+            } else {
+              return done(new Error("User not found"), false, {
+                message: "User not found",
+              });
+            }
+          })
+          .catch((err) => done(err));
       } catch (err) {
         done(err);
       }
