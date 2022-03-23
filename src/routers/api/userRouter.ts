@@ -11,15 +11,9 @@ userRouter.get(
   passport.authenticate("jwt", { session: false }),
   asyncWrapper(userController.getUser)
 );
-userRouter.post(
-  "/",
+userRouter.delete(
+  "/:id",
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  userController.postUser
-);
-userRouter.delete("/:id",
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  passport.authenticate("jwt", { session: false }), asyncWrapper(userController.deleteUser));
-userRouter.post("/auth/login",
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  userController.login
+  passport.authenticate("jwt", { session: false }),
+  asyncWrapper(userController.deleteUser)
 );
