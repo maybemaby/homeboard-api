@@ -3,7 +3,6 @@ import passport from "passport";
 import { homeRouter } from "./homeRouter";
 import { userRouter } from "./userRouter";
 import { roommateRouter } from "./roommateRouter";
-import { messageRouter } from "./messageRouter";
 import { eventRouter } from "./eventRouter";
 import taskRouter from "./taskRouter";
 
@@ -19,11 +18,6 @@ apiRouter.use(
   "/v1/roommates",
   passport.authenticate("jwt", { session: false }) as Handler,
   roommateRouter
-);
-apiRouter.use(
-  "/v1/messages",
-  passport.authenticate("jwt", { session: false }) as Handler,
-  messageRouter
 );
 apiRouter.use(
   "/v1/events",

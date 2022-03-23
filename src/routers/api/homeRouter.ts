@@ -18,6 +18,7 @@ homeRouter.get(
   asyncWrapper(canViewHome),
   asyncWrapper(messageController.getMessagesByHome)
 );
+homeRouter.post("/:homeId/messages", asyncWrapper(canViewHome), asyncWrapper(messageController.postMessage));
 homeRouter.put(
   "/:homeId",
   asyncWrapper(canViewHome),

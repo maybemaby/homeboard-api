@@ -2,8 +2,11 @@ import { Request, Response } from "express";
 import { IMessage } from "../models/Message";
 import MessageService from "../services/MessageService";
 
+
+// api/v1/homes/:homeId/messages
 async function postMessage(req: Request, res: Response) {
   const data = req.body as IMessage;
+  data.homeId = req.params.homeId;
   const message = await MessageService.createOne(data);
   if (message) {
     res.status(201).json(message).send();
