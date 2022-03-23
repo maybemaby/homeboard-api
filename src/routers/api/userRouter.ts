@@ -16,7 +16,9 @@ userRouter.post(
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   userController.postUser
 );
-userRouter.delete("/:id", asyncWrapper(userController.deleteUser));
+userRouter.delete("/:id",
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  passport.authenticate("jwt", { session: false }), asyncWrapper(userController.deleteUser));
 userRouter.post("/auth/login",
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   userController.login
