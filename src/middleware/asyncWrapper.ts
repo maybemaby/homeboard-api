@@ -1,9 +1,9 @@
-import { Request, RequestHandler, Response } from "express";
+import { Request, NextFunction, Response } from "express";
 
 type AsyncHandler = (
   req: Request,
   res: Response,
-  next: RequestHandler
+  next: NextFunction
 ) => Promise<void>;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ErrorHandler = (err: any) => void;
