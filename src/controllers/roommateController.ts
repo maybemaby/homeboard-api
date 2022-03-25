@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { IRoommate, RoommateRole } from "../models/Roommate";
 import RoommateService from "../services/RoommateService";
 import TaskService from "../services/TaskService";
+import { IUser } from "../models/User";
 
 async function getById(req: Request, res: Response) {
   const id = req.params.id;
@@ -25,10 +26,18 @@ async function getAllByHome(req: Request, res: Response) {
 
 async function createOne(req: Request, res: Response) {
   const data = req.body as IRoommate;
+  // JWT protected route will have user token
+  data.userId = (req.user as IUser).id;
   try {
     const roommate = await RoommateService.createOne(data);
     res.status(201).json(roommate).send();
-  } catch {
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.message.includes("User already has a profile")) {
+        res.status(400).send(err.message);
+        return;
+      }
+    }
     res.status(400).send("Invalid request");
   }
 }

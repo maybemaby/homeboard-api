@@ -1,5 +1,6 @@
 import prisma from "../data/db";
 import { IRoommate, RoommateRole } from "../models/Roommate";
+import HomeService from "./HomeService";
 
 async function getAll(homeId?: string) {
   if (homeId) {
@@ -30,6 +31,9 @@ async function getById(id: string) {
 // If neither, throw error.
 async function createOne(roommate: IRoommate) {
   if (roommate.homeId) {
+    if (await HomeService.containsUser(roommate.userId, roommate.homeId)) {
+      throw new Error("User already has a profile in this home");
+    }
     return prisma.roommate.create({
       data: {
         role: roommate.role,
@@ -42,6 +46,9 @@ async function createOne(roommate: IRoommate) {
       },
     });
   } else if (roommate.home) {
+    if (await HomeService.containsUser(roommate.userId, roommate.home.id)) {
+      throw new Error("User already has a profile in this home");
+    }
     return prisma.roommate.create({
       data: {
         role: roommate.role,
