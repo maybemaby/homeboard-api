@@ -4,6 +4,7 @@ import cors from "cors";
 import passport from "passport";
 import { apiRouter } from "./routers/api";
 import { authRouter } from "./routers/auth";
+import helmet from "helmet";
 
 dotenv.config();
 const PORT = process.env.PORT ?? 3000;
@@ -17,6 +18,11 @@ app.disable("x-powered-by");
 
 app.use(cors());
 app.use(express.json());
+app.use(
+  helmet({
+    hidePoweredBy: false,
+  })
+);
 app.use(passport.initialize());
 
 app.use("/api", apiRouter);
