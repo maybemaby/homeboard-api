@@ -6,3 +6,4 @@ node_modules
 test.http
 dev.db
 *.db-journal
+*.log
