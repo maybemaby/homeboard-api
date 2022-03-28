@@ -45,14 +45,17 @@ model User {
 }
 
 model Message {
-  id         String   @id @unique @default(cuid())
-  content    String
-  sentAt     DateTime @default(now())
-  sender     Roommate @relation(fields: [senderId], references: [id])
-  senderId   String
-  receiverId String?
-  Home       Home     @relation(fields: [homeId], references: [id])
-  homeId     String
+  id          String    @id @unique @default(cuid())
+  content     String
+  sentAt      DateTime  @default(now())
+  sender      Roommate  @relation(fields: [senderId], references: [id])
+  senderId    String
+  receiverId  String?
+  Home        Home      @relation(fields: [homeId], references: [id])
+  homeId      String
+  replies     Message[] @relation("MessageToReplies")
+  repliedTo   Message?  @relation("MessageToReplies", fields: [repliedToId], references: [id])
+  repliedToId String?
 }
 
 model Event {
