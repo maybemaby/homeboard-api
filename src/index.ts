@@ -2,9 +2,10 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import passport from "passport";
+import helmet from "helmet";
 import { apiRouter } from "./routers/api";
 import { authRouter } from "./routers/auth";
-import helmet from "helmet";
+import { authLogger } from "./middleware/logging";
 
 dotenv.config();
 const PORT = process.env.PORT ?? 3000;
@@ -26,7 +27,7 @@ app.use(
 app.use(passport.initialize());
 
 app.use("/api", apiRouter);
-app.use("/auth", authRouter);
+app.use("/auth", authLogger, authRouter);
 
 app.listen(PORT, () => {
   console.log(`Server started at port ${PORT}`);

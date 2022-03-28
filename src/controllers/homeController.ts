@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { IHome } from "../models/Home";
 import HomeService from "../services/HomeService";
+import { errorLogger } from "../middleware/logging";
 
 async function getHomes(_req: Request, res: Response) {
   const homes = await HomeService.getAll();
@@ -19,10 +20,13 @@ async function getHomeById(req: Request, res: Response) {
 
 async function postHome(req: Request, res: Response) {
   const data = req.body as IHome;
-  if (data) {
+  try {
     const home = await HomeService.createOne(data);
     res.status(201).json(home).send();
-  } else {
+  } catch (err) {
+    if (err instanceof Error) {
+      errorLogger(err, false, req);
+    }
     res.status(400).send();
   }
 }
@@ -34,7 +38,10 @@ async function putHome(req: Request, res: Response) {
   try {
     const updated = await HomeService.editOne(id, data);
     res.status(201).json(updated);
-  } catch {
+  } catch (err) {
+    if (err instanceof Error) {
+      errorLogger(err, false, req);
+    }
     res.sendStatus(400);
   }
 }

@@ -4,6 +4,7 @@ import passport from "passport";
 import { IUser } from "../models/User";
 import UserService from "../services/UserService";
 import { JWT_SECRET } from "../index";
+import { errorLogger } from "../middleware/logging";
 
 async function getUser(req: Request, res: Response) {
   const id = req.params.id;
@@ -41,8 +42,11 @@ async function deleteUser(req: Request, res: Response) {
   try {
     await UserService.deleteOne(id);
     res.status(202).send();
-  } catch {
+  } catch (err) {
     res.status(400).send("Failed to delete user");
+    if (err instanceof Error) {
+      errorLogger(err, false, req);
+    }
   }
 }
 
@@ -68,6 +72,9 @@ function login(req: Request, res: Response, next: NextFunction) {
             return res.json({ token });
           });
         } catch (err) {
+          if (err instanceof Error) {
+            errorLogger(err, false, req);
+          }
           return next(err);
         }
       }

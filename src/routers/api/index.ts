@@ -13,7 +13,11 @@ apiRouter.use(
   passport.authenticate("jwt", { session: false }) as Handler,
   homeRouter
 );
-apiRouter.use("/v1/user", userRouter);
+apiRouter.use(
+  "/v1/user",
+  passport.authenticate("jwt", { session: false }) as Handler,
+  userRouter
+);
 apiRouter.use(
   "/v1/roommates",
   passport.authenticate("jwt", { session: false }) as Handler,

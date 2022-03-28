@@ -3,6 +3,7 @@ import { IRoommate, RoommateRole } from "../models/Roommate";
 import RoommateService from "../services/RoommateService";
 import TaskService from "../services/TaskService";
 import { IUser } from "../models/User";
+import { errorLogger } from "../middleware/logging";
 
 async function getById(req: Request, res: Response) {
   const id = req.params.id;
@@ -33,6 +34,7 @@ async function createOne(req: Request, res: Response) {
     res.status(201).json(roommate).send();
   } catch (err) {
     if (err instanceof Error) {
+      errorLogger(err, false, req);
       if (err.message.includes("User already has a profile")) {
         res.status(400).send(err.message);
         return;
@@ -47,7 +49,10 @@ async function deleteOne(req: Request, res: Response) {
   try {
     await RoommateService.deleteOne(id);
     res.status(202).send();
-  } catch {
+  } catch (err) {
+    if (err instanceof Error) {
+      errorLogger(err, false, req);
+    }
     res.status(400).send("Invalid request");
   }
 }
@@ -83,7 +88,10 @@ async function getTasks(req: Request, res: Response) {
       });
       res.status(200).json(data);
     }
-  } catch {
+  } catch (err) {
+    if (err instanceof Error) {
+      errorLogger(err, false, req);
+    }
     res.sendStatus(400);
   }
 }
@@ -98,7 +106,10 @@ async function putRole(req: Request, res: Response) {
     try {
       const updated = await RoommateService.changeRole(id, role);
       res.status(201).json(updated);
-    } catch {
+    } catch (err) {
+      if (err instanceof Error) {
+        errorLogger(err, false, req);
+      }
       res.sendStatus(400);
     }
   }
