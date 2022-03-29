@@ -20,6 +20,18 @@ homeRouter.get(
   requestLogger,
   asyncWrapper(messageController.getMessagesByHome)
 );
+homeRouter.get(
+  "/:homeId/messages/:messageId/replies",
+  asyncWrapper(canViewHome),
+  requestLogger,
+  asyncWrapper(messageController.getMessageReplies)
+);
+homeRouter.post(
+  "/:homeId/messages/:messageId/replies",
+  asyncWrapper(canViewHome),
+  requestLogger,
+  asyncWrapper(messageController.postMessageReplies)
+);
 homeRouter.post(
   "/:homeId/messages",
   asyncWrapper(canViewHome),

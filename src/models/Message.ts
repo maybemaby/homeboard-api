@@ -5,4 +5,5 @@ export interface IMessage {
   receiverId?: string;
   content: string;
   sentAt: Date;
+  repliedToId?: string;
 }
